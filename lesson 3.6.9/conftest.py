@@ -1,35 +1,34 @@
 import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+"""сonftest.py  в этот файл выносятся фиктуры для тестов, чтобы не плодить их в каждом тестовом файле"""
 
 def pytest_addoption(parser):
-    #parser.addoption('--browser_name', action='store', default='chrome', help="Choose browser: chrome or firefox")
-    parser.addoption('--language', action='store', default='', help="language: ru or en or es or ...")
-
+    """
+    Функция считывания перменной language из командной строки
+    :param parser: определение настроек считывания с командной строки
+    :return: Ничего не возвращает, является преднастройкой, чтобы с коммандной строки можно было стчитывать
+    """
+    parser.addoption('--language', action='store', default=None, help="language: ru or en or es or ...")
 
 @pytest.fixture(scope="function")
 def browser(request):
-    #browser_name = request.config.getoption("browser_name")
-    browser_name = 'chrome'
-    lang = request.config.getoption("language")
-    print("--------------------",lang,'------------------')
+    """
+    Фиктура, подготавливает браузер к запуску теста. В данном случае так же
+    считывается значения языка, для передачи в браузер и отображения страницы на этом языке
+    :param request:
+    :return:
+    """
+    language = request.config.getoption("language") #Получение значения переменной из командной строки
     browser = None
-    options = Options()
 
-    if browser_name == "chrome":
-        options.add_experimental_option('prefs', {'intl.accept_languages': lang})
+    if language:
+        options = Options()                                                            #Настройка заголовка для передачи в бразер
+        options.add_experimental_option('prefs', {'intl.accept_languages': language})  #Настройка заголовка для передачи в бразер
         print("\nstart chrome browser for test..")
-        browser = webdriver.Chrome(options=options)
-
-    elif browser_name == "firefox":
-        fp = webdriver.FirefoxProfile()
-        fp.set_preference("intl.accept_languages", lang)
-        print("\nstart firefox browser for test..")
-        browser = webdriver.Firefox(firefox_profile=fp)
-
+        browser = webdriver.Chrome(options=options)                                    #Вызов браузера с настройками
     else:
-        raise pytest.UsageError("--browser_name should be chrome or firefox")
-        raise pytest.UsageError("--language should be ru or en")
+        raise pytest.UsageError("Dont select language (ru,en,es, ...)")                #Поднять исключение если язык не был указан в командной строке
     yield browser
     print("\nquit browser..")
     browser.quit()
