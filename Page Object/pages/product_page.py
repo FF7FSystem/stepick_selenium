@@ -2,7 +2,7 @@ from .base_page import BasePage
 from .locators import BasketPageLocators,ProductPageLocators
 
 
-class BasketPage(BasePage):
+class ProductPage(BasePage):
 
     def should_be_basket_link(self):
         assert self.is_element_present(*BasketPageLocators.BASKET_LINK), "Basket link is not presented"
@@ -40,7 +40,8 @@ class BasketPage(BasePage):
         assert price_in_title in price_in_basket , f"the price of the book added in basket does not match _2, {price_in_title},  {price_in_basket}"
 
     def should_not_be_success_message(self):
-        assert self.is_not_element_present(*ProductPageLocators.SUCCESS_MESSAGE),"Success message is presented, but should not be"
+        assert self.is_not_element_present(*ProductPageLocators.SUCCESS_MESSAGE), "Success message is presented, but should not be"
 
     def disappeared_success_message(self):
-        assert self.is_disappeared(*ProductPageLocators.SUCCESS_MESSAGE),"Success message is not disappeared, and it shouldn't"
+        assert self.is_disappeared(*ProductPageLocators.SUCCESS_MESSAGE), "Success message is not disappeared, and it shouldn't"
+

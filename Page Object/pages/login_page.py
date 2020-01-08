@@ -18,3 +18,14 @@ class LoginPage(BasePage):
 
     def should_be_register_form(self):
         assert self.is_element_present(*LoginPageLocators.REG_FORM), "Registration form not found"
+
+    def register_new_user(self, email, password):
+        input1 = self.browser.find_element_by_xpath("//input[@name='registration-email']")
+        input1.send_keys(email)
+        input2 = self.browser.find_element_by_xpath("//input[@name='registration-password1']")
+        input2.send_keys(password)
+        input3 = self.browser.find_element_by_xpath("//input[@name='registration-password2']")
+        input3.send_keys(password)
+
+        button = self.browser.find_element_by_xpath("//button[@name='registration_submit']")
+        button.click()
